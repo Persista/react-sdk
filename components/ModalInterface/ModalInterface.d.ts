@@ -1,11 +1,19 @@
 import React from "react";
 
+interface AIResponse {
+  response: string;
+  status: -1 | 0 | 1;
+  sentiment_score: number;
+};
+
 interface ModalInterfaceProps {
   isOpen: boolean;
-  onClose: () => void;
   actionId: string;
-  context: string;
-  setContext: React.Dispatch<React.SetStateAction<{ AI: string[]; User: string[] }>>;
+  onClose: () => void;
+  onPositiveResult: (res: AIResponse) => void;
+  onNegativeResult: (res: AIResponse) => void;
+  endTimeoutDuration?: number;
+  onResponse?: (res: AIResponse) => void;
 }
 
 declare const ModalInterface: React.FC<ModalInterfaceProps>;

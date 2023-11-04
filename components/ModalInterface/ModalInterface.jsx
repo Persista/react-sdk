@@ -1,57 +1,98 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./ModalInterface.css";
 import Modal from "../Modal/Modal";
-import { getFirstQuery, getLLMResponse } from "@persistajs/core";
+import { createChat, getLLMResponse } from "@persistajs/core";
 
-const ModalInterface = ({ isOpen, onClose, actionId, context, setContext }) => {
+const ModalInterface = ({
+  isOpen,
+  actionId,
+  endTimeoutDuration = 2000,
+  onClose = () => {},
+  onPositiveResult = (res) => {},
+  onNegativeResult = (res) => {},
+  onResponse = (res) => {},
+}) => {
+  const [isLoading, setIsLoading] = useState(true);
+  const [isResponseLoading, setIsResponseLoading] = useState(false);
   const [query, setQuery] = useState("");
   const [userAnswer, setUserAnswer] = useState("");
+  const [chatId, setChatId] = useState("");
+  const [hasEnded, setHasEnded] = useState(false);
+
   useEffect(() => {
     if (isOpen) {
-      getFirstQuery(actionId).then((res) => {
-        setQuery(res.data.result);
+      setIsLoading(true);
+      createChat(actionId).then((res) => {
+        setQuery(res.data.response);
+        setChatId(res.data.id);
         setUserAnswer("");
+        setHasEnded(false);
+        setIsLoading(false);
       });
     }
   }, [isOpen]);
 
   const getNextLLMResponse = () => {
-    getLLMResponse(actionoId, context, query, userAnswer).then((res) => {
-      setContext((prevContext) => {
-        let newContext = { ...prevContext };
-        newContext.AI.push(query);
-        newContext.User.push(userAnswer);
-        return newContext;
-        s;
-      });
-      setQuery(res.data.data);
+    setIsResponseLoading(true);
+    getLLMResponse(chatId, userAnswer).then((res) => {
+      setIsResponseLoading(false);
+      setQuery(res.data.response);
       setUserAnswer("");
+
+      if (onResponse) {
+        onResponse(res.data);
+      }
+
+      if (res.data.status === 1) {
+        setHasEnded(true);
+        onPositiveResult(res.data);
+        setTimeout(() => {
+          onClose();
+        }, endTimeoutDuration);
+        return;
+      }
+
+      if (res.data.status === -1) {
+        setHasEnded(true);
+        onNegativeResult(res.data);
+        setTimeout(() => {
+          onClose();
+        }, endTimeoutDuration);
+        return;
+      }
     });
   };
 
   return (
     <Modal hasCloseBtn={true} isOpen={isOpen} onClose={onClose}>
-      <div className="container">
-        <h3 className="heading">Heading</h3>
-        <p className="prompt-query">
-          Lorem ipsum gypsyum wijafoiewja oiwejf oiajewoij oiewj foeiwjf oiewjaoi jeoiweafj oijwefa oijaweoif jowiafj
-          oiwjef oiwj?
-        </p>
-        <div className="text-area-container">
-          <textarea
-            className="prompt-answer"
-            placeholder="Some text..."
-            value={userAnswer}
-            onChange={(e) => setUserAnswer(e.target.value)}
-          ></textarea>
+      {isLoading ? (
+        <div className="loader-contaier">
+          <span className="loader"></span>
         </div>
+      ) : (
+        <div className="container">
+          <h3 className="heading"></h3>
+          <p className="prompt-query">{isResponseLoading ? <span className="loader"></span> : query}</p>
+          {!hasEnded && (
+            <>
+              <div className="text-area-container">
+                <textarea
+                  className="prompt-answer"
+                  placeholder="Some text..."
+                  value={userAnswer}
+                  onChange={(e) => setUserAnswer(e.target.value)}
+                ></textarea>
+              </div>
 
-        <div className="footer">
-          <button className="submit-button" onClick={getNextLLMResponse}>
-            submit
-          </button>
+              <div className="footer">
+                <button className="submit-button" disabled={isResponseLoading} onClick={getNextLLMResponse}>
+                  submit
+                </button>
+              </div>
+            </>
+          )}
         </div>
-      </div>
+      )}
     </Modal>
   );
 };

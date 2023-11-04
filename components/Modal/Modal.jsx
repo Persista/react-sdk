@@ -5,7 +5,9 @@ const Modal = ({
   isOpen,
   hasCloseBtn = true,
   onClose,
-  children
+  children,
+  apiKey,
+  actionId,
 }) => {
   const [isModalOpen, setModalOpen] = useState(isOpen);
   const modalRef = useRef(null);

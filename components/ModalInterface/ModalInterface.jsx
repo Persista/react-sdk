@@ -1,17 +1,33 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./ModalInterface.css";
 import Modal from "../Modal/Modal";
+import { getFirstQuery, getLLMResponse } from "../../../js-core";
 
-const ModalInterface = ({ onSubmit, isOpen, onClose }) => {
-  const focusInputRef = useRef(null);
-  
+const ModalInterface = ({ isOpen, onClose, actionId, context, setContext }) => {
+  const [query, setQuery] = useState("");
+  const [userAnswer, setUserAnswer] = useState("");
   useEffect(() => {
-    if (isOpen && focusInputRef.current) {
-      setTimeout(() => {
-        if (focusInputRef.current) focusInputRef.current.focus();
-      }, 0);
+    if(isOpen) {
+      getFirstQuery(actionId).then
+      (res => {
+        setQuery(res.data.result)
+        setUserAnswer("");
+      })
     }
   }, [isOpen]);
+
+  const getNextLLMResponse = () => {
+    getLLMResponse(actionoId, context, query, userAnswer).then((res) => {
+      setContext((prevContext) => {
+        let newContext = { ...prevContext };
+        newContext.AI.push(query);
+        newContext.User.push(userAnswer);
+        return newContext;s
+      });
+      setQuery(res.data.data);
+      setUserAnswer("");
+    })
+  }
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -40,11 +56,15 @@ const ModalInterface = ({ onSubmit, isOpen, onClose }) => {
           <textarea
             className="prompt-answer"
             placeholder="Some text..."
+            value={userAnswer}
+            onChange={(e) => setUserAnswer(e.target.value)}
           ></textarea>
         </div>
 
         <div className="footer">
-          <button className="submit-button">submit</button>
+          <button className="submit-button" 
+          onClick={getNextLLMResponse}
+          >submit</button>
         </div>
       </div>
     </Modal>

@@ -1,0 +1,28 @@
+.modal {
+  max-width: 20rem;
+  position: relative;
+  box-shadow: hsl(0 0% 0% / 10%) 0 0 0.5rem 0.25rem;
+  backdrop-filter: hsl(0 0% 0% / 50%);
+}
+
+.modal-close-btn {
+  font-size: 0.75em;
+  position: absolute;
+  top: 0.25em;
+  right: 0.25em;
+}
+
+.exit-button {
+  border: 2px solid black;
+  padding: 8px 12px;
+  border-radius: 100%;
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  outline: none;
+  border: none;
+  z-index: 100;
+}
+.exit-button:hover {
+  background-color: darkgrey;
+}

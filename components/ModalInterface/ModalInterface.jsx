@@ -1,18 +1,17 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./ModalInterface.css";
 import Modal from "../Modal/Modal";
-import { getFirstQuery, getLLMResponse } from "../../../js-core";
+import { getFirstQuery, getLLMResponse } from "@persistajs/core";
 
 const ModalInterface = ({ isOpen, onClose, actionId, context, setContext }) => {
   const [query, setQuery] = useState("");
   const [userAnswer, setUserAnswer] = useState("");
   useEffect(() => {
-    if(isOpen) {
-      getFirstQuery(actionId).then
-      (res => {
-        setQuery(res.data.result)
+    if (isOpen) {
+      getFirstQuery(actionId).then((res) => {
+        setQuery(res.data.result);
         setUserAnswer("");
-      })
+      });
     }
   }, [isOpen]);
 
@@ -22,23 +21,21 @@ const ModalInterface = ({ isOpen, onClose, actionId, context, setContext }) => {
         let newContext = { ...prevContext };
         newContext.AI.push(query);
         newContext.User.push(userAnswer);
-        return newContext;s
+        return newContext;
+        s;
       });
       setQuery(res.data.data);
       setUserAnswer("");
-    })
-  }
-
-
+    });
+  };
 
   return (
     <Modal hasCloseBtn={true} isOpen={isOpen} onClose={onClose}>
       <div className="container">
-        
         <h3 className="heading">Heading</h3>
         <p className="prompt-query">
-          Lorem ipsum gypsyum wijafoiewja oiwejf oiajewoij oiewj foeiwjf
-          oiewjaoi jeoiweafj oijwefa oijaweoif jowiafj oiwjef oiwj?
+          Lorem ipsum gypsyum wijafoiewja oiwejf oiajewoij oiewj foeiwjf oiewjaoi jeoiweafj oijwefa oijaweoif jowiafj
+          oiwjef oiwj?
         </p>
         <div className="text-area-container">
           <textarea
@@ -50,9 +47,9 @@ const ModalInterface = ({ isOpen, onClose, actionId, context, setContext }) => {
         </div>
 
         <div className="footer">
-          <button className="submit-button" 
-          onClick={getNextLLMResponse}
-          >submit</button>
+          <button className="submit-button" onClick={getNextLLMResponse}>
+            submit
+          </button>
         </div>
       </div>
     </Modal>

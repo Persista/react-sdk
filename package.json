@@ -1,5 +1,5 @@
 {
-  "name": "react-sdk",
+  "name": "@persistajs/react",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -10,6 +10,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    
+    "@persistajs/core": "^1.0.0"
   }
 }

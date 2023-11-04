@@ -29,19 +29,7 @@ const ModalInterface = ({ isOpen, onClose, actionId, context, setContext }) => {
     })
   }
 
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setFormState((prevFormData) => ({
-      ...prevFormData,
-      [name]: value,
-    }));
-  };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    // onSubmit(formState);
-    // setFormState(initialModalInterfaceData);
-  };
 
   return (
     <Modal hasCloseBtn={true} isOpen={isOpen} onClose={onClose}>

@@ -1,7 +1,23 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import "./ModalInterface.css";
 import Modal from "../Modal/Modal";
 import { createChat, getLLMResponse } from "@persistajs/core";
+
+interface AIResponse {
+  response: string;
+  status: -1 | 0 | 1;
+  sentiment_score: number;
+}
+
+interface ModalInterfaceProps {
+  isOpen: boolean;
+  actionId: string;
+  onClose: () => void;
+  onPositiveResult: (res: AIResponse) => void;
+  onNegativeResult: (res: AIResponse) => void;
+  endTimeoutDuration?: number;
+  onResponse?: (res: AIResponse) => void;
+}
 
 const ModalInterface = ({
   isOpen,
@@ -11,7 +27,7 @@ const ModalInterface = ({
   onPositiveResult = (res) => {},
   onNegativeResult = (res) => {},
   onResponse = (res) => {},
-}) => {
+}: ModalInterfaceProps) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isResponseLoading, setIsResponseLoading] = useState(false);
   const [query, setQuery] = useState("");

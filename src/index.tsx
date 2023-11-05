@@ -37,48 +37,50 @@ export const PersistaModal = ({
   const [chatId, setChatId] = useState("");
   const [hasEnded, setHasEnded] = useState(false);
 
+  async function createNewChat() {
+    let res = await createChat(actionId, apiKey);
+    setQuery(res.data.response);
+    setChatId(res.data.id);
+    setUserAnswer("");
+    setHasEnded(false);
+    setIsLoading(false);
+  }
+
   useEffect(() => {
     if (isOpen) {
       setIsLoading(true);
-      createChat(actionId, apiKey).then((res) => {
-        setQuery(res.data.response);
-        setChatId(res.data.id);
-        setUserAnswer("");
-        setHasEnded(false);
-        setIsLoading(false);
-      });
+      createNewChat();
     }
   }, [isOpen]);
 
-  const getNextLLMResponse = () => {
+  const getNextLLMResponse = async () => {
     setIsResponseLoading(true);
-    getLLMResponse(chatId, userAnswer, apiKey).then((res) => {
-      setIsResponseLoading(false);
-      setQuery(res.data.response);
-      setUserAnswer("");
+    let res = await getLLMResponse(chatId, userAnswer, apiKey);
+    setIsResponseLoading(false);
+    setQuery(res.data.response);
+    setUserAnswer("");
 
-      if (onResponse) {
-        onResponse(res.data);
-      }
+    if (onResponse) {
+      onResponse(res.data);
+    }
 
-      if (res.data.status === 1) {
-        setHasEnded(true);
-        onPositiveResult(res.data);
-        setTimeout(() => {
-          onClose();
-        }, endTimeoutDuration);
-        return;
-      }
+    if (res.data.status === 1) {
+      setHasEnded(true);
+      onPositiveResult(res.data);
+      setTimeout(() => {
+        onClose();
+      }, endTimeoutDuration);
+      return;
+    }
 
-      if (res.data.status === -1) {
-        setHasEnded(true);
-        onNegativeResult(res.data);
-        setTimeout(() => {
-          onClose();
-        }, endTimeoutDuration);
-        return;
-      }
-    });
+    if (res.data.status === -1) {
+      setHasEnded(true);
+      onNegativeResult(res.data);
+      setTimeout(() => {
+        onClose();
+      }, endTimeoutDuration);
+      return;
+    }
   };
 
   return (

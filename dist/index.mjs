@@ -1,21 +1,21 @@
-import e, { useState as r, useRef as y, useEffect as h } from "react";
-import { createChat as R, getLLMResponse as I } from "@persistajs/core";
-const k = ({ isOpen: s, hasCloseBtn: u = !0, onClose: o, children: l, apiKey: f, actionId: g }) => {
-  const [d, c] = r(s), n = y(null), m = () => {
+import e, { useState as n, useRef as R, useEffect as h } from "react";
+import { createChat as I, getLLMResponse as k } from "@persistajs/core";
+const C = ({ isOpen: s, hasCloseBtn: u = !0, onClose: o, children: l, apiKey: f, actionId: N }) => {
+  const [d, c] = n(s), r = R(null), i = () => {
     o && o(), c(!1);
-  }, i = (a) => {
-    a.key === "Escape" && m();
+  }, m = (a) => {
+    a.key === "Escape" && i();
   };
   return h(() => {
     c(s);
   }, [s]), h(() => {
-    const a = n.current;
+    const a = r.current;
     a && (d ? a.showModal() : a.close());
   }, [d]), /* @__PURE__ */ e.createElement(
     "dialog",
     {
-      ref: n,
-      onKeyDown: i,
+      ref: r,
+      onKeyDown: m,
       style: {
         // padding: "2rem",
         position: "relative",
@@ -28,43 +28,45 @@ const k = ({ isOpen: s, hasCloseBtn: u = !0, onClose: o, children: l, apiKey: f,
     u && /* @__PURE__ */ e.createElement("button", { onClick: o, className: "exit-button" }, "X"),
     l
   );
-}, q = ({
+}, A = ({
   isOpen: s,
   actionId: u,
   endTimeoutDuration: o = 2e3,
   onClose: l = () => {
   },
   apiKey: f,
-  onPositiveResult: g = (n) => {
+  onPositiveResult: N = (r) => {
   },
-  onNegativeResult: d = (n) => {
+  onNegativeResult: d = (r) => {
   },
-  onResponse: c = (n) => {
+  onResponse: c = (r) => {
   }
 }) => {
-  const [n, m] = r(!0), [i, a] = r(!1), [x, N] = r(""), [b, p] = r(""), [M, L] = r(""), [v, E] = r(!1);
+  const [r, i] = n(!0), [m, a] = n(!1), [x, g] = n(""), [b, p] = n(""), [w, y] = n(""), [M, E] = n(!1);
+  async function L() {
+    let t = await I(u, f);
+    g(t.data.response), y(t.data.id), p(""), E(!1), i(!1);
+  }
   h(() => {
-    s && (m(!0), R(u, f).then((t) => {
-      N(t.data.response), L(t.data.id), p(""), E(!1), m(!1);
-    }));
+    s && (i(!0), L());
   }, [s]);
-  const w = () => {
-    a(!0), I(M, b, f).then((t) => {
-      if (a(!1), N(t.data.response), p(""), c && c(t.data), t.data.status === 1) {
-        E(!0), g(t.data), setTimeout(() => {
-          l();
-        }, o);
-        return;
-      }
-      if (t.data.status === -1) {
-        E(!0), d(t.data), setTimeout(() => {
-          l();
-        }, o);
-        return;
-      }
-    });
+  const v = async () => {
+    a(!0);
+    let t = await k(w, b, f);
+    if (a(!1), g(t.data.response), p(""), c && c(t.data), t.data.status === 1) {
+      E(!0), N(t.data), setTimeout(() => {
+        l();
+      }, o);
+      return;
+    }
+    if (t.data.status === -1) {
+      E(!0), d(t.data), setTimeout(() => {
+        l();
+      }, o);
+      return;
+    }
   };
-  return /* @__PURE__ */ e.createElement(k, { hasCloseBtn: !0, isOpen: s, onClose: l }, n ? /* @__PURE__ */ e.createElement("div", { className: "loader-contaier" }, /* @__PURE__ */ e.createElement("span", { className: "loader" })) : /* @__PURE__ */ e.createElement("div", { className: "container" }, /* @__PURE__ */ e.createElement("h3", { className: "heading" }), /* @__PURE__ */ e.createElement("p", { className: "prompt-query" }, i ? /* @__PURE__ */ e.createElement("span", { className: "loader" }) : x), !v && /* @__PURE__ */ e.createElement(e.Fragment, null, /* @__PURE__ */ e.createElement("div", { className: "text-area-container" }, /* @__PURE__ */ e.createElement(
+  return /* @__PURE__ */ e.createElement(C, { hasCloseBtn: !0, isOpen: s, onClose: l }, r ? /* @__PURE__ */ e.createElement("div", { className: "loader-contaier" }, /* @__PURE__ */ e.createElement("span", { className: "loader" })) : /* @__PURE__ */ e.createElement("div", { className: "container" }, /* @__PURE__ */ e.createElement("h3", { className: "heading" }), /* @__PURE__ */ e.createElement("p", { className: "prompt-query" }, m ? /* @__PURE__ */ e.createElement("span", { className: "loader" }) : x), !M && /* @__PURE__ */ e.createElement(e.Fragment, null, /* @__PURE__ */ e.createElement("div", { className: "text-area-container" }, /* @__PURE__ */ e.createElement(
     "textarea",
     {
       className: "prompt-answer",
@@ -72,8 +74,8 @@ const k = ({ isOpen: s, hasCloseBtn: u = !0, onClose: o, children: l, apiKey: f,
       value: b,
       onChange: (t) => p(t.target.value)
     }
-  )), /* @__PURE__ */ e.createElement("div", { className: "footer" }, /* @__PURE__ */ e.createElement("button", { className: "submit-button", disabled: i, onClick: w }, "submit")))));
+  )), /* @__PURE__ */ e.createElement("div", { className: "footer" }, /* @__PURE__ */ e.createElement("button", { className: "submit-button", disabled: m, onClick: v }, "submit")))));
 };
 export {
-  q as PersistaModal
+  A as PersistaModal
 };

@@ -1,4 +1,5 @@
-/// <reference types="react" />
+import React from "react";
+import "./index.css";
 interface AIResponse {
     response: string;
     status: -1 | 0 | 1;
@@ -12,7 +13,7 @@ interface ModalInterfaceProps {
     onNegativeResult: (res: AIResponse) => void;
     endTimeoutDuration?: number;
     onResponse?: (res: AIResponse) => void;
+    apiKey: string;
 }
-declare const ModalInterface: ({ isOpen, actionId, endTimeoutDuration, onClose, onPositiveResult, onNegativeResult, onResponse, }: ModalInterfaceProps) => JSX.Element;
-
-export { ModalInterface as PersistaModal };
+export declare const PersistaModal: ({ isOpen, actionId, endTimeoutDuration, onClose, apiKey, onPositiveResult, onNegativeResult, onResponse, }: ModalInterfaceProps) => React.JSX.Element;
+export {};

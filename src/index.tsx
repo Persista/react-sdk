@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import "./ModalInterface.css";
-import Modal from "../Modal/Modal";
+import "./index.css";
+import Modal from "./Modal/Modal";
 import { createChat, getLLMResponse } from "@persistajs/core";
 
 interface AIResponse {
@@ -17,13 +17,15 @@ interface ModalInterfaceProps {
   onNegativeResult: (res: AIResponse) => void;
   endTimeoutDuration?: number;
   onResponse?: (res: AIResponse) => void;
+  apiKey: string;
 }
 
-const ModalInterface = ({
+export const PersistaModal = ({
   isOpen,
   actionId,
   endTimeoutDuration = 2000,
   onClose = () => {},
+  apiKey,
   onPositiveResult = (res) => {},
   onNegativeResult = (res) => {},
   onResponse = (res) => {},
@@ -38,7 +40,7 @@ const ModalInterface = ({
   useEffect(() => {
     if (isOpen) {
       setIsLoading(true);
-      createChat(actionId).then((res) => {
+      createChat(actionId, apiKey).then((res) => {
         setQuery(res.data.response);
         setChatId(res.data.id);
         setUserAnswer("");
@@ -50,7 +52,7 @@ const ModalInterface = ({
 
   const getNextLLMResponse = () => {
     setIsResponseLoading(true);
-    getLLMResponse(chatId, userAnswer).then((res) => {
+    getLLMResponse(chatId, userAnswer, apiKey).then((res) => {
       setIsResponseLoading(false);
       setQuery(res.data.response);
       setUserAnswer("");
@@ -112,5 +114,3 @@ const ModalInterface = ({
     </Modal>
   );
 };
-
-export default ModalInterface;

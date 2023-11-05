@@ -8,5 +8,5 @@ interface ModalProps {
     actionId?: string;
     children: React.ReactNode;
 }
-declare const Modal: ({ isOpen, hasCloseBtn, onClose, children, apiKey, actionId }: ModalProps) => JSX.Element;
+declare const Modal: ({ isOpen, hasCloseBtn, onClose, children, apiKey, actionId }: ModalProps) => React.JSX.Element;
 export default Modal;

@@ -4,7 +4,7 @@ interface AIResponse {
   response: string;
   status: -1 | 0 | 1;
   sentiment_score: number;
-};
+}
 
 interface ModalInterfaceProps {
   isOpen: boolean;
